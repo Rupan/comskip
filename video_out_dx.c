@@ -55,7 +55,7 @@ char osname[1024];
 //#include "video_out.h"
 //#include "mpeg2convert.h"
 
-#include "ddraw.h"
+#include <ddraw.h>
 #include <initguid.h>
 
 

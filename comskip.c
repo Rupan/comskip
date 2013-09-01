@@ -839,6 +839,7 @@ unsigned char graph[MAXHEIGHT*MAXWIDTH*3];
 int gy=0;
 
 // Function Prototypes
+FILE *myfopen( const char * f, char * m);
 bool				BuildBlocks(bool recalc);
 void				Recalc(void);
 double				ValidateBlackFrames(long reason, double ratio, int remove);
@@ -7938,7 +7939,7 @@ BOOL AnsiToUnicode16(const char *in_Src, WCHAR *out_Dst, INT in_MaxLen)
 }
 
 
-int myfopen( const char * f, char * m)
+FILE *myfopen( const char * f, char * m)
 {
     wchar_t wf[2000], wm[2000];
     int n;
