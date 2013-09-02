@@ -9,7 +9,7 @@ DONATOR=-DDONATOR -DDONATORS
 CFLAGS=-O2 -g3
 LDFLAGS=-static-libgcc -lcomdlg32 -lgdi32 -largtable2 -lavformat -lavcodec -lavutil -lx264 -lws2_32
 
-OBJS=comskip.o getopt.o gettimeofday.o mpeg2dec.o video_out_dx.o comskip.res
+OBJS=comskip.o gettimeofday.o mpeg2dec.o video_out_dx.o comskip.res
 EXE=comskip.exe
 SYM=comskip.debuginfo
 
