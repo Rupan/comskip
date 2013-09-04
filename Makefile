@@ -6,10 +6,10 @@ CC=i686-w64-mingw32-gcc
 WINDRES=i686-w64-mingw32-windres
 OBJCOPY=i686-w64-mingw32-objcopy
 DONATOR=-DDONATOR -DDONATORS
-CFLAGS=-O2 -g3
+CFLAGS=-O3 -g
 LDFLAGS=-static-libgcc -lcomdlg32 -lgdi32 -largtable2 -lavformat -lavcodec -lavutil -lx264 -lws2_32
 
-OBJS=comskip.o gettimeofday.o mpeg2dec.o video_out_dx.o comskip.res
+OBJS=comskip.o mpeg2dec.o video_out_dx.o comskip.res
 EXE=comskip.exe
 SYM=comskip.debuginfo
 

@@ -169,7 +169,14 @@ __int64 best_effort_timestamp;
 extern int coding_type;
 
 #ifdef _WIN32
-void gettimeofday (struct timeval * tp, void * dummy);
+#include <sys/timeb.h>
+static inline void gettimeofday(struct timeval * tp, void * dummy)
+{
+    struct _timeb tm;
+    _ftime (&tm);
+    tp->tv_sec = tm.time;
+    tp->tv_usec = tm.millitm * 1000;
+}
 #endif
 
 
