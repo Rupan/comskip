@@ -1,0 +1,95 @@
+diff --git a/libavformat/file.c b/libavformat/file.c
+index e09a64b..f30e109 100644
+--- a/libavformat/file.c
++++ b/libavformat/file.c
+@@ -34,6 +34,11 @@
+ #include "os_support.h"
+ #include "url.h"
+ 
++#if defined(_MSC_VER) || defined(_WIN32)
++#include <windows.h>
++#include <locale.h>
++#endif
++
+ /* Some systems may not have S_ISFIFO */
+ #ifndef S_ISFIFO
+ #  ifdef S_IFIFO
+@@ -63,6 +68,54 @@ static const AVClass file_class = {
+     .version    = LIBAVUTIL_VERSION_INT,
+ };
+ 
++#if defined(_MSC_VER) || defined(_WIN32)
++static int AnsiToUnicode16(char *in_Src, wchar_t *out_Dst, int in_MaxLen);
++static int AnsiToUnicode16(char *in_Src, wchar_t *out_Dst, int in_MaxLen)
++{
++     /* locals */
++     int lv_Len;
++     // do NOT decrease maxlen for the eos
++     if (in_MaxLen <= 0)
++         return 0;
++     // let windows find out the meaning of ansi
++     // - the SrcLen=-1 triggers MBTWC to add a eos to Dst and fails if MaxLen is too small.
++     // - if SrcLen is specified then no eos is added
++     // - if (SrcLen+1) is specified then the eos IS added
++     lv_Len = MultiByteToWideChar(CP_UTF8, 0, in_Src, -1, out_Dst, in_MaxLen);
++     // validate
++     if (lv_Len < 0)
++         lv_Len = 0;
++     // ensure eos, watch out for a full buffersize
++     // - if the buffer is full without an eos then clear the output like MBTWC does
++     //   in case of too small outputbuffer
++     // - unfortunately there is no way to let MBTWC return shortened strings,
++     //   if the outputbuffer is too small then it fails completely
++     if (lv_Len < in_MaxLen)
++         out_Dst[lv_Len] = 0;
++     else if (out_Dst[in_MaxLen-1])
++         out_Dst[0] = 0;
++     // done
++     return 1;
++}
++
++static int myopen( char * f, int oflag, int pmode);
++static int myopen( char * f, int oflag, int pmode)
++{
++     wchar_t wf[2000];
++     AnsiToUnicode16(f, wf, 2000);
++     return(_wopen(wf,oflag, pmode));
++}
++
++
++static int mystat( char * f, struct _stati64 * s);
++static int mystat( char * f, struct _stati64 * s)
++{
++     wchar_t wf[2000];
++     AnsiToUnicode16(f, wf, 2000);
++     return(_wstati64(wf,s));
++}
++#endif // _MSC_VER || _WIN32
++
+ static int file_read(URLContext *h, unsigned char *buf, int size)
+ {
+     FileContext *c = h->priv_data;
+@@ -97,7 +150,11 @@ static int file_check(URLContext *h, int mask)
+             ret |= AVIO_FLAG_WRITE;
+ #else
+     struct stat st;
++#if defined(_MSC_VER) || defined(_WIN32)
++    int ret = mystat(h->filename, &st);
++#else
+     int ret = stat(h->filename, &st);
++#endif
+     if (ret < 0)
+         return AVERROR(errno);
+ 
+@@ -132,7 +189,11 @@ static int file_open(URLContext *h, const char *filename, int flags)
+ #ifdef O_BINARY
+     access |= O_BINARY;
+ #endif
++#if defined(_MSC_VER) || defined(_WIN32)
++    fd = myopen((char *)filename, access, 0666);
++#else
+     fd = open(filename, access, 0666);
++#endif
+     if (fd == -1)
+         return AVERROR(errno);
+     c->fd = fd;
