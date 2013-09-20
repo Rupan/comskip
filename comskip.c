@@ -304,7 +304,7 @@ logo_block_info*			logo_block = NULL;
 long						logo_block_count = 0;		// How many groups have already been identified. Increment after fill.
 long						max_logo_block_count;
 
-extern bool					processCC = false;
+bool					processCC = false;
 extern int					reorderCC;
 
 typedef struct
@@ -7978,7 +7978,7 @@ FILE* LoadSettings(int argc, char ** argv)
     FILE*				logo_file = NULL;
     FILE*				log_file = NULL;
     FILE*				test_file = NULL;
-    char *CEW_argv[10];
+    const char *CEW_argv[10];
     size_t				len = 0;
     double				tmp;
     int					i = 0;
@@ -8690,7 +8690,7 @@ FILE* LoadSettings(int argc, char ** argv)
             printf("Incompatible TXT file\n");
             exit(2);
         }
-        framearray = NULL;
+        framearray = false;
         printf("Close window or hit ESCAPE when done\n");
         output_debugwindow = true;
         ReviewResult();
