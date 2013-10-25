@@ -2,11 +2,18 @@
 # Makefile for comskip.exe
 # ----------------------------------------------------------------------
 
-CC=i686-w64-mingw32-gcc
-WINDRES=i686-w64-mingw32-windres
-OBJCOPY=i686-w64-mingw32-objcopy
+# use 'make BITS=64' for a 64-bit build
+ifeq ($(BITS),64)
+  ARCH=x86_64
+else
+  ARCH=i686
+endif
+
+CC=$(ARCH)-w64-mingw32-gcc
+WINDRES=$(ARCH)-w64-mingw32-windres
+OBJCOPY=$(ARCH)-w64-mingw32-objcopy
 DONATOR=-DDONATOR -DDONATORS
-CFLAGS=-O3 -g
+CFLAGS=-O3 -g -Wno-deprecated-declarations
 LDFLAGS=-static-libgcc -lcomdlg32 -lgdi32 -largtable2 -lavformat -lavcodec -lavutil -lws2_32
 
 OBJS=comskip.o mpeg2dec.o video_out_dx.o comskip.res

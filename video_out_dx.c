@@ -351,7 +351,7 @@ static long FAR PASCAL event_procedure (HWND hwnd, UINT message,
           break;
 
      case WM_WINDOWPOSCHANGED:
-          instance = (dx_instance_t *) GetWindowLong (hwnd, GWL_USERDATA);
+          instance = (dx_instance_t *) GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
           /* update the window position and size */
           point_window.x = 0;
@@ -543,7 +543,7 @@ static int create_window (dx_instance_t * instance)
      /* store a directx_instance pointer into the window local storage
       * (for later use in event_handler).
       * We need to use SetWindowLongPtr when it is available in mingw */
-     SetWindowLong (instance->window, GWL_USERDATA, (LONG) instance);
+     SetWindowLongPtr(instance->window, GWLP_USERDATA, (LONG_PTR)instance);
      SetWindowPos(instance->window, HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW|SWP_NOSIZE);
 
      ShowWindow (instance->window, SW_SHOW);
@@ -930,8 +930,8 @@ void vo_init(int width, int height, char *title)
      memset(buf2,128,width*height);
 
 #ifdef RGB
-     instance = vo_dxrgb_open();
-     hWind = instance;
+     instance = (dx_instance_t *)vo_dxrgb_open();
+     hWind = (HWND)instance;
      strcpy(instance->title, title);
      dxrgb_setup( instance, width, height, width, height, &result);
 //	dx_setup_fbuf ( instance, buffer, &result);

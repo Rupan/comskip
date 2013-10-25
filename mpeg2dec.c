@@ -245,7 +245,7 @@ char field_t;
 char tempstring[512];
 
 
-extern int myfopen( const char * f, char * m);
+FILE *myfopen(const char * f, char * m);
 
 #define DUMP_OPEN if (output_timing) { sprintf(tempstring, "%s.timing.csv", basename); timing_file = myfopen(tempstring, "w"); DUMP_HEADER }
 #define DUMP_HEADER if (timing_file) fprintf(timing_file, "type   ,dts         ,pts         ,clock       ,delta       ,offset\n");
@@ -405,7 +405,7 @@ void sound_to_frames(VideoState *is, short *b, int s, int format)
             for (i = 0; i < s; i++)
             {
                 *audio_buffer_ptr++ = (short) ((*fb++) * 64000);
-                if ((long) audio_buffer_ptr > (long) &audio_buffer[AUDIOBUFFER-10])
+                if ((LONG_PTR) audio_buffer_ptr > (LONG_PTR) &audio_buffer[AUDIOBUFFER-10])
                     break;
             }
         }
@@ -580,7 +580,7 @@ void audio_packet_process(VideoState *is, AVPacket *pkt)
         if (!is->frame)
         {
             if (!(is->frame = avcodec_alloc_frame()))
-                return -1;
+                return;
         }
         else
             avcodec_get_frame_defaults(is->frame);
