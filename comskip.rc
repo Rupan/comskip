@@ -36,3 +36,8 @@ END
 // Icon with lowest ID value placed first to ensure application icon remains consistent on all systems.
 2               ICON                    "comskip32.ico"
 3               ICON                    "comskip16.ico"
+#if defined(_WIN32) && !defined(_WIN64)
+4               RT_MANIFEST             "comskip32.manifest"
+#else // http://msdn.microsoft.com/en-us/library/b0yt6ck0.aspx
+4               RT_MANIFEST             "comskip64.manifest"
+#endif
