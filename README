@@ -4,6 +4,10 @@ Upstream project:
   http://www.kaashoek.com/comskip/
   svn://svn.kaashoek.com/
 
+Application compatibility: http://msdn.microsoft.com/en-us/library/windows/desktop/dd371711%28v=vs.85%29.aspx
+
+Since Comskip calls functions from the DDRAW Lock API, it cannot be manifested for Windows 7.  That does *not* mean it will not run on Windows 7 or 8.
+
 This application depends on three 3rd party libraries:
 
   x264: https://www.videolan.org/developers/x264.html (optional)
